@@ -1,0 +1,5 @@
+django
+django-jet
+djangorestframework
+requests
+psycopg2

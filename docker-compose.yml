@@ -1,0 +1,53 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    networks: 
+      main:
+        aliases:
+          - postgres
+  bot:
+    build: ./bot
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./ssl:/ssl
+    networks: 
+      main:
+        aliases:
+          - bot
+    restart: always
+  web:
+    build: ./web
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./web:/web
+    networks: 
+      main:
+        aliases:
+          - web
+    restart: always
+  nginx:
+    image: nginx:latest
+    expose:
+      - 80
+      - 443
+    ports: 
+      - "80:80"
+      - "443:443"
+    networks: 
+      main:
+        aliases:
+          - nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+    restart: always
+networks: 
+  main:
